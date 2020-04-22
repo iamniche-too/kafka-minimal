@@ -25,4 +25,4 @@ TBC
 ## Python Kafka consumer test
 TBC
 
-For more information please contact jez.austin@focussensors.co.uk or nicholas.hemley@focussensors.co.uk
+For more information please contact jezaustin@focussensors.co.uk or nicholas.hemley@focussensors.co.uk

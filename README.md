@@ -15,7 +15,7 @@ java/test/ - java source for minimal test
 python/src/  - Python source for Kafka consumer 
 python/test/ - Pythn source for minimal test
 docker/ - Dockerfiles
-run_java_test.sh - script to rin the Java test
+run_java_test.sh - script to run the Java test
 run_python_test.sh - script to run the Python test
 ```
 

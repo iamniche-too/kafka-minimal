@@ -47,9 +47,9 @@ public class MemoryUseReportingConsumer<K,V> extends AConsumer {
 		
 		long memoryIncreaseInBytes = (peakMemoryUsageInBytes - initialMemoryUsageInBytes);
 		
-		System.out.format("[MemoryUseReportingConsumer] peakMemoryUsageInBytes=%d%n", peakMemoryUsageInBytes);
-		System.out.format("[MemoryUseReportingConsumer] memoryIncreaseInBytes=%d%n", memoryIncreaseInBytes);
-		System.out.format("[MemoryUseReportingConsumer] delta=%d%n", (memoryIncreaseInBytes - previousIncreaseInBytes));
+		System.out.format("[MemoryUseReportingConsumer] - peakMemoryUsageInBytes=%d%n", peakMemoryUsageInBytes);
+		System.out.format("[MemoryUseReportingConsumer] - memoryIncreaseInBytes=%d%n", memoryIncreaseInBytes);
+		System.out.format("[MemoryUseReportingConsumer] - delta=%d%n", (memoryIncreaseInBytes - previousIncreaseInBytes));
 		
 		previousIncreaseInBytes = memoryIncreaseInBytes;
 	}

@@ -11,7 +11,7 @@ import org.cache2k.benchmark.jmh.ForcedGcMemoryProfiler;
  * Based on:
  * https://github.com/apache/kafka/blob/trunk/examples/src/main/java/kafka/examples/Consumer.java
  * 
- * @author nic
+ * @author nic hemley
  *
  * @param Integer
  * @param String
@@ -22,11 +22,20 @@ public class MemoryUseReportingConsumer<K,V> extends AConsumer {
 	
 	private long peakMemoryUsageInBytes = 0;
 	
+	private long previousIncreaseInBytes = 0;
+	
 	public MemoryUseReportingConsumer(Consumer consumer, List<String> topics) {
 		super(consumer, topics);
 		
 		// record initial memory use
 		initialMemoryUsageInBytes = getSettledUsedMemory();
+	}
+	
+	// also report memory use
+	protected void report(long kBsInWindow, long windowLengthInSecs) {
+		super.report(kBsInWindow, windowLengthInSecs);
+		
+		reportPeakMemoryUse();
 	}
 	
 	protected void reportPeakMemoryUse() {
@@ -36,8 +45,13 @@ public class MemoryUseReportingConsumer<K,V> extends AConsumer {
 			peakMemoryUsageInBytes = settledMemoryInBytes;
 		}
 		
+		long memoryIncreaseInBytes = (peakMemoryUsageInBytes - initialMemoryUsageInBytes);
+		
 		System.out.format("[MemoryUseReportingConsumer] peakMemoryUsageInBytes=%d%n", peakMemoryUsageInBytes);
-		System.out.format("[MemoryUseReportingConsumer] memoryIncreaseInBytes=%d%n", (peakMemoryUsageInBytes - initialMemoryUsageInBytes));
+		System.out.format("[MemoryUseReportingConsumer] memoryIncreaseInBytes=%d%n", memoryIncreaseInBytes);
+		System.out.format("[MemoryUseReportingConsumer] delta=%d%n", (memoryIncreaseInBytes - previousIncreaseInBytes));
+		
+		previousIncreaseInBytes = memoryIncreaseInBytes;
 	}
 
 	private long getCurrentlyUsedMemory() {

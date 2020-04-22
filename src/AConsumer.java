@@ -69,12 +69,9 @@ public abstract class AConsumer<K, V> implements Runnable {
 				windowLengthInSecs, throughputMBPerS);
 		System.out.format("[AConsumer] - Total transferred: %d MBs%n", totalKBsTransferred / 1000);
 	}
-
-	protected abstract void reportPeakMemoryUse();
 	
-	private void report(long kBsInWindow, long windowLengthInSecs) {
+	protected void report(long kBsInWindow, long windowLengthInSecs) {
 		reportThroughput(kBsInWindow, windowLengthInSecs);
-		reportPeakMemoryUse();
 	}
 
 	private void processNoMessage() {

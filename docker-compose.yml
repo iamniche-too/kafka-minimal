@@ -22,3 +22,10 @@ services:
     build: producer
     environment:
       KAFKA_BROKER_LIST: kafka:9093
+  consumer:
+    build: consumer
+    image: nichemley/minimal-kafka
+    environment:
+      CONSUMER_GROUP_ID: consumer-group-0
+      BOOTSTRAP_SERVERS: localhost:9092
+      TOPIC_NAMES: sensor0 

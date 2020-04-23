@@ -14,7 +14,6 @@ java/src/ - Java source for Kafka consumer
 java/test/ - java source for minimal test
 python/src/  - Python source for Kafka consumer 
 python/test/ - Pythn source for minimal test
-docker/ - Dockerfiles
 run_java_test.sh - script to run the Java test
 run_python_test.sh - script to run the Python test
 ```
@@ -25,4 +24,4 @@ TBC
 ## Python Kafka consumer test
 TBC
 
-For more information please contact jez.austin@focussensors.co.uk or nicholas.hemley@focussensors.co.uk
+For more information please contact jezaustin@focussensors.co.uk or nicholas.hemley@focussensors.co.uk

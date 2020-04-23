@@ -3,7 +3,7 @@
 ##!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import io, random
+import io, random, os
 
 from confluent_kafka import Producer
 import avro.schema
@@ -36,7 +36,7 @@ throughput_debug_interval_in_sec = 1
 max_payloads_before_flush = 5
 
 # Address of the kafka servers and topic name
-kafka_servers = 'localhost:9092'
+kafka_servers = os.getenv("KAFKA_BROKER_LIST")
 topic_name = 'test'
 
 

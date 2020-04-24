@@ -22,3 +22,7 @@ services:
     build: producer
     environment:
       KAFKA_BROKER_LIST: kafka:9093
+  consumer:
+    build: python/src
+    environment:
+      KAFKA_BROKER_LIST: kafka:9093

@@ -27,13 +27,12 @@ public abstract class AConsumer<K, V> implements Runnable {
 
 	private CountDownLatch shutdownLatch;
 
-	private long POLL_INTERVAL_IN_MS = 5 * 1000;
+	// one second poll interval
+	private long POLL_INTERVAL_IN_MS = 1 * 1000;
 
-	private long THROUGHPUT_DEBUG_INTERVAL_SEC = 10;
+	private long THROUGHPUT_DEBUG_INTERVAL_MILLIS = 10 * 1000;
 
 	private int NO_MESSAGE_REPORTING_INTERVAL_IN_MILLIS = 10 * 1000;
-
-	private int KBS_IN_MB = 1000;
 
 	private int noMessageCount = 0;
 
@@ -47,6 +46,9 @@ public abstract class AConsumer<K, V> implements Runnable {
 		this.consumer = consumer;
 		this.shutdown = new AtomicBoolean(false);
 		this.shutdownLatch = new CountDownLatch(1);
+		
+		// subscribe to topics
+		consumer.subscribe(topics);
 	}
 
 	private Map<String, Object> processRecord(ConsumerRecord record) {
@@ -63,15 +65,15 @@ public abstract class AConsumer<K, V> implements Runnable {
 	}
 
 
-	private void reportThroughput(long kBsInWindow, long windowLengthInSecs) {
-		float throughputMBPerS = (float) (kBsInWindow / (float) (windowLengthInSecs * KBS_IN_MB));
+	private void reportThroughput(long kBsInWindow) {
+		float throughputMBPerS = (float) (kBsInWindow / (float) THROUGHPUT_DEBUG_INTERVAL_MILLIS);
 		System.out.format("[AConsumer] - Throughput in window (%d KB in %d secs): %.2f MB/s%n", kBsInWindow,
-				windowLengthInSecs, throughputMBPerS);
+				THROUGHPUT_DEBUG_INTERVAL_MILLIS, throughputMBPerS);
 		System.out.format("[AConsumer] - Total transferred: %d MBs%n", totalKBsTransferred / 1000);
 	}
 	
-	protected void report(long kBsInWindow, long windowLengthInSecs) {
-		reportThroughput(kBsInWindow, windowLengthInSecs);
+	protected void report(long kBsInWindow) {
+		reportThroughput(kBsInWindow);
 	}
 
 	private void processNoMessage() {
@@ -124,13 +126,8 @@ public abstract class AConsumer<K, V> implements Runnable {
 						processNoMessage();
 					}
 
-					consumer.commitAsync();
-					
-					// Determine if we should report throughput
-					long windowLengthInSecs = (this.currentTime - this.windowStartTime) / 1000;
-
-					if (windowLengthInSecs > THROUGHPUT_DEBUG_INTERVAL_SEC) {
-						report(kBsInWindow, windowLengthInSecs);
+					if ((currentTime - windowStartTime) > THROUGHPUT_DEBUG_INTERVAL_MILLIS) {
+						report(kBsInWindow);
 
 						// Reset ready for the next throughput indication
 						windowStartTime = System.currentTimeMillis();

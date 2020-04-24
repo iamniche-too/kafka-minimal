@@ -22,12 +22,15 @@ services:
     build: producer
     environment:
       KAFKA_BROKER_LIST: kafka:9093
+      TOPIC_NAMES: sensor0
   consumer-python:
     build: python/src
     environment:
       KAFKA_BROKER_LIST: kafka:9093
-  consumer-java:
-    image: nichemley/minimal-kafka
+      TOPIC_NAME: sensor0
+  consumer:
+    build: java-consumer-docker
+    #image: nichemley/minimal-kafka
     environment:
       CONSUMER_GROUP_ID: consumer-group-0
       BOOTSTRAP_SERVERS: localhost:9092

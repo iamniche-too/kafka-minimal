@@ -18,16 +18,22 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+     - "zookeeper"
   producer:
     build: producer
     environment:
       KAFKA_BROKER_LIST: kafka:9093
       TOPIC_NAMES: sensor0
+    depends_on:
+     - "kafka"
   consumer-python:
     build: python/src
     environment:
       KAFKA_BROKER_LIST: kafka:9093
-      TOPIC_NAME: sensor0
+      TOPIC_NAMES: sensor0
+    depends_on:
+     - "kafka"
   consumer:
     build: java-consumer-docker
     #image: nichemley/minimal-kafka
@@ -35,4 +41,6 @@ services:
       CONSUMER_GROUP_ID: consumer-group-0
       BOOTSTRAP_SERVERS: localhost:9092
       TOPIC_NAMES: sensor0 
+    depends_on:
+     - "kafka"
 

@@ -20,11 +20,12 @@ sensor_id = 0
 # Approximate size of message payload required to be sent in KB
 payload_size_in_kb = 75
 
-# Total data to send in KB, will determine how long the producer runs for
-total_data_to_send_in_kb = 750000
-
 # Upper limit on amount of data that should be sent per time interval (in KB/s)
 upper_data_rate_limit_kbs = 75000 
+
+# Total data to send in KB, will determine how long the producer runs for
+total_data_to_send_in_kb = upper_data_rate_limit_kbs * 60 * 3 
+#750000
 
 # How often to indicate data rate in seconds
 throughput_debug_interval_in_sec = 1
@@ -37,7 +38,8 @@ max_payloads_before_flush = 5
 
 # Address of the kafka servers and topic name
 kafka_servers = os.getenv("KAFKA_BROKER_LIST")
-topic_name = 'test'
+topic_name = os.getenv("TOPIC_NAMES")
+#'test'
 
 
 ###

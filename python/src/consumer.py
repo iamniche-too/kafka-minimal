@@ -14,7 +14,8 @@ from confluent_kafka import Consumer
 
 # Address of the kafka servers and topic name
 kafka_servers = os.getenv('KAFKA_BROKER_LIST')
-topic_name = 'test'
+topic_name = os.getenv("TOPIC_NAMES")
+#'test'
 
 print("kafka_servers: {}".format(kafka_servers))
 

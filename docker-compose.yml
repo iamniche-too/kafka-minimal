@@ -27,7 +27,6 @@ services:
     environment:
       KAFKA_BROKER_LIST: kafka:9093
   consumer-java:
-    build: consumer
     image: nichemley/minimal-kafka
     environment:
       CONSUMER_GROUP_ID: consumer-group-0

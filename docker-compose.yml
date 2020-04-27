@@ -1,46 +1,55 @@
 version: '2'
 services:
-  zookeeper:
+  zookeeper0:
     image: wurstmeister/zookeeper:3.4.6
+    container_name: zookeeper0
+    hostname: zookeeper0
     ports:
      - "2181:2181"
-  kafka:
-    build: kafka-docker
+  kafka0:
+    #build: kafka-docker
+    image: wurstmeister/kafka:2.12-2.4.1
+    container_name: kafka0
+    hostname: kafka0
     ports:
      - "9092:9092"
     expose:
      - "9093"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9093, OUTSIDE://kafka0:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://kafka0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper0:2181
     depends_on:
-     - "zookeeper"
-  producer:
+     - "zookeeper0"
+  producer-python0:
     build: producer
+    container_name: producer-python0
+    hostname: producer-python0
     environment:
-      KAFKA_BROKER_LIST: kafka:9093
+      KAFKA_BROKER_LIST: kafka0:9092
       TOPIC_NAMES: sensor0
     depends_on:
-     - "kafka"
-  consumer-python:
-    build: python/src
-    environment:
-      KAFKA_BROKER_LIST: kafka:9093
-      TOPIC_NAMES: sensor0
-    depends_on:
-     - "kafka"
-  consumer:
+     - "consumer-java0"
+  #consumer-python:
+  #  container_name: consumer-python0
+  #  hostname: consumer-python0
+  #  network_mode: bridge
+  #  build: python/src
+  #  environment:
+  #    KAFKA_BROKER_LIST: 172.18.0.3:9092
+  #    TOPIC_NAMES: sensor0
+  #  depends_on:
+  #   - "kafka0"
+  consumer-java0:
     build: java-consumer-docker
     #image: nichemley/minimal-kafka
+    container_name: consumer-java0
+    hostname: consumer-java0
     environment:
       CONSUMER_GROUP_ID: consumer-group-0
-      BOOTSTRAP_SERVERS: localhost:9092
+      BOOTSTRAP_SERVERS: kafka0:9092
       TOPIC_NAMES: sensor0 
     depends_on:
-     - "kafka"
-
+     - "kafka0"
